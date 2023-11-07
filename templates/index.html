@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIS GE</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css">
+    <style>
+
+    body {
+        background:white;
+        /* Cor de fundo preto com gradiente radial */
+    }
+
+    .custom-container {
+        margin-top: 20px;
+    }
+
+    .custom-form {
+        margin-bottom: 20px;
+    }
+
+    .plot-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .font{font-size: 18px;
+            color: black;
+        }
+
+    h1 {
+        color: #ccc; /* Cor de texto cinza claro */
+    }
+
+    table {
+        color: #ccc; /* Cor de texto cinza claro */
+    }
+    .sombra {
+        text-shadow: 2px 2px 3px black;
+    }
+</style>
+</head>
+
+<body>
+    <div style="background: linear-gradient(to right, #ffcc00, #ff6600);" class="container custom-container ">
+    <br>    
+        <h1 class="sombra" style="text-align: center; color: white;">SISTEMA DE ADMINISTRAÇÃO DE DESPESAS PESSOAIS</h1>
+    <br>
+</div>
+<div class="container custom-container">
+    <hr>
+</div>
+    <div class="container custom-container">
+        <h1 class="mb-4 sombra" style="text-align: center; color: #ff6600;" >LISTA DE DESPESAS</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Descrição</th>
+                    <th>Data</th>
+                    <th>Valor</th>
+                    <th>Condição</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for despesa in despesas %}
+                <tr>
+                    <td>{{ despesa[0] }}</td>
+                    <td>{{ despesa[1] }}</td>
+                    <td>{{ despesa[2]|formatar_data }}</td>
+                    <td>{{ despesa[3] }}</td>
+                    <td>{{ despesa[4] }}</td>
+                    <td>{{ despesa[5] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="sombra" style="text-align: center; color: #ff6600; ">Gerenciar Despesas</h2>
+        
+                    <!-- Formulário para adicionar despesa -->
+                    <form action="/gerenciar_despesas" method="post">
+                        <div class="form-group">
+                            <label class="font" for="descricao">Descrição:</label>
+                            <input type="text" id="descricao" name="descricao" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="font"  for="data">Data:</label>
+                            <input type="date" id="data" name="data" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="font"  for="valor" style="text-transform: lowercase;">Valor:</label>
+                            <input type="float" id="valor" name="valor" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="font"  for="id_condicao">Condição:</label>
+                            <select id="id_condicao" name="id_condicao" class="form-control" required>
+                                <!-- Opções para as condições disponíveis -->
+                                {% for condicao in condicoes %}
+                                <option value="{{ condicao[0] }}">{{ condicao[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="font"  for="id_status">Status:</label>
+                            <select id="id_status" name="id_status" class="form-control" required>
+                                <!-- Opções para os status disponíveis -->
+                                {% for s in status %}
+                                <option value="{{ s[0] }}">{{ s[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-primary" name="adicionar_despesa">Adicionar</button>
+                    </form>
+                    <h2 style="text-align: center; color: #ff6600; " class="sombra">Deletar Despesa</h2>
+                    <div class="container mt-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Formulário para deletar despesa -->
+                    <form action="/gerenciar_despesas" method="post">
+                        <div class="form-group">
+                            <label class="font"  for="despesa_id">ID da Despesa para Deletar:</label>
+                            <input type="number" id="despesa_id" name="despesa_id" class="form-control" required>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-danger" name="deletar_despesa">Deletar</button>
+                    </form>
+                </div>
+        
+                <div class="col-md-6">
+                    <h2 class="sombra" style="text-align: center; color: #ff6600;">Atualizar Despesa</h2>
+        
+                    <!-- Formulário para atualizar despesa -->
+                    <form action="/atualizar_despesa" method="post">
+                        <form action="/atualizar_despesa" method="post">
+                            <div class="form-group">
+                                <label class="font"  for="despesa_id">ID da Despesa:</label>
+                                <input type="text" id="despesa_id" name="despesa_id" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="font"  for="descricao">Nova Descrição:</label>
+                                <input type="text" id="descricao" name="descricao" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="font"  for="data">Nova Data:</label>
+                                <input type="date" id="data" name="data" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="font"  for="valor">Novo Valor:</label>
+                                <input type="float" id="valor" name="valor" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="font"  for="id_condicao">Nova Condição:</label>
+                                <select id="id_condicao" name="id_condicao" class="form-control" required>
+                                    <!-- Opções para as condições disponíveis -->
+                                    {% for condicao in condicoes %}
+                                    <option value="{{ condicao[0] }}">{{ condicao[1] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="font"  for="id_status">Novo Status:</label>
+                                <select id="id_status" name="id_status" class="form-control" required>
+                                    <!-- Opções para os status disponíveis -->
+                                    {% for s in status %}
+                                    <option value="{{ s[0] }}">{{ s[1] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <br>
+                            <button type="submit" class="btn btn-primary">Atualizar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div>
+                <div class="container custom-container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2 class="mt-4 sombra" style="text-align: center; color: #ff6600;">Gerenciar Condições</h2>
+                            <form action="/gerenciar_condicoes" method="post" class="custom-form">
+                                <div class="form-group">
+                                    <label class="font"  for="nova_condicao">Nova Condição:</label>
+                                    <input type="text" id="nova_condicao" name="nova_condicao" class="form-control" required>
+                                </div>
+                                <br>
+                                <button type="submit" name="adicionar_condicao" class="btn btn-primary">Adicionar Condição</button>
+                            </form>
+            
+                            <form action="/gerenciar_condicoes" method="post" class="custom-form">
+                                <div class="form-group">
+                                    <label class="font"  for="descricao_condicao">Condição para Deletar:</label>
+                                    <select id="descricao_condicao" name="descricao_condicao" class="form-control" required>
+                                        {% for condicao in condicoes %}
+                                        <option value="{{ condicao[1] }}">{{ condicao[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <br>
+                                <button type="submit" name="deletar_condicao" class="btn btn-danger ">Deletar Condição</button>
+                            </form>
+                        </div>
+            
+                        <div class="col-md-6">
+                            <h2 class="mt-4 sombra" style="text-align: center; color: #ff6600;">Gerenciar Status</h2>
+                            <form action="/gerenciar_status" method="post" class="custom-form">
+                                <div class="form-group">
+                                    <label class="font"  for="novo_status">Novo Status:</label>
+                                    <input type="text" id="novo_status" name="novo_status" class="form-control" required>
+                                </div>
+                                <br>
+                                <button type="submit" name="adicionar_status" class="btn btn-primary">Adicionar Status</button>
+                            </form>
+            
+                            <form action="/gerenciar_status" method="post" class="custom-form">
+                                <div class="form-group">
+                                    <label class="font"  for="descricao_status">Status para Deletar:</label>
+                                    <select id="descricao_status" name="descricao_status" class="form-control" required>
+                                        {% for status_item in status %}
+                                        <option value="{{ status_item[1] }}">{{ status_item[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <br>
+                                <button type="submit" name="deletar_status" class="btn btn-danger">Deletar Status</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <div>
+</body>
+
+</html>
